@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arabic keyboard Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero" role="banner">
+    <div class="hero__content">
+      <h1>Arabic keyboard Studio</h1>
+    </div>
+  </header>
+
+  <main class="workspace" aria-labelledby="workspace-title">
+    <section class="workspace__panel" aria-live="polite">
+      <div class="panel__header">
+        <h2 id="workspace-title">Compose in Arabic</h2>
+        <div class="panel__controls">
+          <button id="theme-toggle" type="button" class="ghost-button" aria-pressed="false">Toggle dark mode</button>
+          <button id="clear-text" type="button" class="ghost-button">Clear</button>
+        </div>
+      </div>
+      <div class="panel__actions-top" role="group" aria-label="Primary editor actions">
+        <button id="copy-text" type="button" class="action-button">Copy text</button>
+        <button id="google-search" type="button" class="action-button">Copy &amp; Google</button>
+        <button id="youtube-search" type="button" class="action-button">Copy &amp; YouTube</button>
+        <button id="download-text" type="button" class="action-button">Download</button>
+      </div>
+      <label for="arabic-text" class="sr-only">Arabic text editor</label>
+      <textarea
+        id="arabic-text"
+        lang="ar"
+        dir="rtl"
+        placeholder="اكتب هنا باستخدام لوحة المفاتيح العربية أو لوحة المفاتيح الفعلية لديك"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        aria-describedby="editor-description"
+      ></textarea>
+      <section class="keyboard-suite" aria-label="Arabic virtual keyboard">
+        <section class="tashkeel" aria-label="Diacritics palette">
+          <div class="tashkeel__header">
+            <h3>تشكيل</h3>
+            <button id="toggle-tashkeel" type="button" class="ghost-button" aria-expanded="true">Hide</button>
+          </div>
+          <div id="tashkeel-keys" class="tashkeel__keys"></div>
+        </section>
+        <section class="keyboard" id="keyboard" aria-label="Arabic keyboard layout"></section>
+        <footer class="keyboard__footer">
+          <p>Tip: Use your physical keyboard – we remap it on the fly to the Arabic 101 layout.</p>
+        </footer>
+      </section>
+      <p id="editor-description" class="panel__help">Your text stays on this device. Use the buttons above to copy, search, or download instantly.</p>
+      <section class="suggestions" aria-live="polite" aria-label="Suggestions">
+        <header class="suggestions__header">
+          <h3>Smart suggestions</h3>
+          <label class="switch" for="suggestions-toggle">
+            <input type="checkbox" id="suggestions-toggle" checked />
+            <span class="switch__track" aria-hidden="true"></span>
+            <span class="switch__label">Auto-complete</span>
+          </label>
+        </header>
+        <div id="suggestions-list" class="suggestions__list" role="listbox"></div>
+      </section>
+    </section>
+  </main>
+
+  <section class="insights" aria-label="Typing analytics">
+    <div class="insights__card">
+      <h3>Live counters</h3>
+      <div class="insights__grid">
+        <div>
+          <span class="insights__label">Characters</span>
+          <span id="character-count" class="insights__value">0</span>
+        </div>
+        <div>
+          <span class="insights__label">Words</span>
+          <span id="word-count" class="insights__value">0</span>
+        </div>
+        <div>
+          <span class="insights__label">Diacritics</span>
+          <span id="tashkeel-count" class="insights__value">0</span>
+        </div>
+      </div>
+    </div>
+    <div class="insights__card">
+      <h3>Session notes</h3>
+      <p>The editor automatically saves your latest text in this browser. Come back anytime to continue where you left off.</p>
+      <p>Need inspiration? Try the curated starter phrases via the smart suggestions module or load a sample:</p>
+      <div class="insights__actions">
+        <button id="load-sample" type="button" class="ghost-button">Load sample text</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer" role="contentinfo">
+    <p>&copy; <span id="current-year"></span> Arabic Keyboard Studio. Crafted for clarity and speed.</p>
+  </footer>
+
+  <template id="suggestion-template">
+    <button type="button" class="suggestion" role="option"></button>
+  </template>
+
+  <div id="live-region" class="sr-only" role="status" aria-live="polite"></div>
+
+  <script src="script.js" type="module"></script>
+</body>
+</html>
