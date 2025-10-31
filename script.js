@@ -10,7 +10,6 @@ let toggleTashkeel;
 let themeToggle;
 let themeToggleIcon;
 let themeToggleLabel;
-
 const tashkeelCharacters = ['َ', 'ً', 'ُ', 'ٌ', 'ِ', 'ٍ', 'ْ', 'ّ', 'ٰ', 'ٔ'];
 
 const keyboardRows = [

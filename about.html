@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Arabic Keyboard Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="info-page about-page">
+  <main aria-labelledby="about-header">
+    <header>
+      <h1 id="about-header">About Arabic Keyboard Studio</h1>
+      <p>
+        Arabic Keyboard Studio gives learners, educators, and designers a polished environment for composing Arabic text
+        without installing a physical keyboard. The retro-inspired layout mirrors the standard Arabic keyboard, while the
+        quick actions make copying, searching, or saving your work effortless.
+      </p>
+    </header>
+
+    <section aria-labelledby="mission-title">
+      <h2 id="mission-title">Who We Built It For</h2>
+      <ul>
+        <li>Students practicing Arabic letter forms and diacritics.</li>
+        <li>Teachers preparing classroom resources or exercises.</li>
+        <li>Designers exploring Arabic typography and layout concepts.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="contact-title" class="contact-form">
+      <h2 id="contact-title">Contact Us</h2>
+      <p>Have feedback or a feature request? Send us a message and we’ll get back to you.</p>
+      <form action="mailto:feedback@arabickeyboard.studio" method="post" enctype="text/plain">
+        <label>
+          Your Name
+          <input type="text" name="name" required />
+        </label>
+        <label>
+          Email
+          <input type="email" name="email" required />
+        </label>
+        <label>
+          Message
+          <textarea name="message" rows="5" required></textarea>
+        </label>
+        <button type="submit">Send</button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
