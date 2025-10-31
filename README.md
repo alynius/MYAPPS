@@ -6,7 +6,7 @@ A lightweight single-page web app that provides an Arabic virtual keyboard with 
 
 1. Open `index.html` in your browser, or run a simple static server (for example `python -m http.server 8000`) from the project root.
 2. Type Arabic characters using the on-screen keyboard or your physical keyboard remapped by the app.
-3. Use the toolbar buttons to copy or clear your text, launch Google or YouTube searches in new tabs, or save a `.txt` file.
+3. Use the toolbar buttons to copy your text, launch Google or YouTube searches in new tabs, or download a `.txt` file.
 
 ## Keyboard controls
 
