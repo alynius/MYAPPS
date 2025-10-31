@@ -40,5 +40,19 @@
       <p>Reach out at <a href="mailto:privacy@arabickeyboard.studio">privacy@arabickeyboard.studio</a>.</p>
     </section>
   </main>
+  <script>
+    (function () {
+      const THEME_STORAGE_KEY = 'arabicKeyboardStudio:theme';
+      let savedTheme = null;
+      try {
+        savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+      } catch (error) {
+        savedTheme = null;
+      }
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+      document.body.classList.toggle('theme-dark', isDark);
+    }());
+  </script>
 </body>
 </html>
