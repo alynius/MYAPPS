@@ -7,6 +7,9 @@ let googleButton;
 let youtubeButton;
 let downloadButton;
 let toggleTashkeel;
+let themeToggle;
+let themeToggleIcon;
+let themeToggleLabel;
 
 const tashkeelCharacters = ['َ', 'ً', 'ُ', 'ٌ', 'ِ', 'ٍ', 'ْ', 'ّ', 'ٰ', 'ٔ'];
 
@@ -83,6 +86,8 @@ let capsLockActive = false;
 const physicalKeyMap = new Map();
 let caretBlinkTimer;
 let caretVisible = true;
+
+const THEME_STORAGE_KEY = 'arabicKeyboardStudio:theme';
 
 function createKeyElement(key) {
   const button = document.createElement('button');
@@ -406,6 +411,9 @@ function initEventListeners() {
   if (toggleTashkeel) {
     toggleTashkeel.addEventListener('click', toggleTashkeelVisibility);
   }
+  if (themeToggle) {
+    themeToggle.addEventListener('click', toggleThemeMode);
+  }
 
   textArea.addEventListener('keydown', handlePhysicalKeydown);
   textArea.addEventListener('keydown', handlePhysicalKeypressVisual);
@@ -454,6 +462,50 @@ function startCaretBlinking() {
   }, 650);
 }
 
+function updateThemeToggle(isDark) {
+  if (!themeToggle) {
+    return;
+  }
+  themeToggle.setAttribute('aria-pressed', String(isDark));
+  if (themeToggleIcon) {
+    themeToggleIcon.textContent = isDark ? '☀️' : '🌙';
+  }
+  if (themeToggleLabel) {
+    themeToggleLabel.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+  }
+  themeToggle.setAttribute('title', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+}
+
+function applyTheme(mode, persist = true) {
+  const dark = mode === 'dark';
+  document.body.classList.toggle('theme-dark', dark);
+  updateThemeToggle(dark);
+  if (persist) {
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, dark ? 'dark' : 'light');
+    } catch (error) {
+      // storage might be unavailable; ignore
+    }
+  }
+}
+
+function initializeTheme() {
+  let savedTheme = null;
+  try {
+    savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+  } catch (error) {
+    savedTheme = null;
+  }
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const initial = savedTheme === 'dark' || (!savedTheme && prefersDark) ? 'dark' : 'light';
+  applyTheme(initial, false);
+}
+
+function toggleThemeMode() {
+  const nextTheme = document.body.classList.contains('theme-dark') ? 'light' : 'dark';
+  applyTheme(nextTheme);
+}
+
 function init() {
   textArea = document.getElementById('arabic-text');
   keyboardContainer = document.getElementById('keyboard');
@@ -464,6 +516,11 @@ function init() {
   youtubeButton = document.getElementById('youtube-search');
   downloadButton = document.getElementById('download-text');
   toggleTashkeel = document.getElementById('toggle-tashkeel');
+  themeToggle = document.getElementById('theme-toggle');
+  themeToggleIcon = themeToggle ? themeToggle.querySelector('.theme-toggle__icon') : null;
+  themeToggleLabel = themeToggle ? themeToggle.querySelector('.theme-toggle__label') : null;
+
+  initializeTheme();
 
   if (!textArea || !keyboardContainer || !tashkeelContainer) {
     return;

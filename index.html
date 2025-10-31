@@ -16,8 +16,12 @@
 
   <main class="editor" aria-label="Arabic composing workspace">
     <section class="editor__panel">
-      <p class="editor__intro">Use the buttons to copy your text or search it instantly.</p>
-
+      <div class="panel__toolbar">
+        <button id="theme-toggle" type="button" class="theme-toggle" aria-pressed="false">
+          <span class="theme-toggle__icon" aria-hidden="true">🌙</span>
+          <span class="theme-toggle__label">Dark Mode</span>
+        </button>
+      </div>
       <div class="editor__actions" role="group" aria-label="Primary actions">
         <button id="copy-text" type="button" class="action-button">
           <span class="action-button__icon" aria-hidden="true">📄</span>

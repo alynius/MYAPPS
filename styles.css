@@ -1,14 +1,78 @@
 :root {
   color-scheme: light;
-  --bg: #0f172a;
-  --panel-bg: rgba(15, 23, 42, 0.75);
-  --surface: #f8fafc;
-  --accent: #0ea5e9;
-  --accent-dark: #0284c7;
-  --text: #0f172a;
-  --text-inverse: #f8fafc;
-  --muted: rgba(15, 23, 42, 0.55);
+  --bg: #f5f7fb;
+  --bg-gradient-top: rgba(59, 130, 246, 0.14);
+  --bg-gradient-bottom: rgba(139, 92, 246, 0.08);
+  --panel-bg: rgba(255, 255, 255, 0.95);
+  --panel-border: rgba(15, 23, 42, 0.06);
+  --panel-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+  --page-text: #0f172a;
+  --panel-text: #0f172a;
+  --panel-muted: rgba(15, 23, 42, 0.6);
+  --button-bg: linear-gradient(180deg, #f8fafc, #e2e8f0);
+  --button-border: rgba(37, 99, 235, 0.35);
+  --button-border-strong: rgba(37, 99, 235, 0.55);
+  --button-shadow: inset 0 0 14px rgba(96, 165, 250, 0.25), 0 12px 25px rgba(148, 163, 184, 0.35);
+  --button-shadow-hover: inset 0 0 18px rgba(96, 165, 250, 0.35), 0 16px 32px rgba(148, 163, 184, 0.4);
+  --button-text: #0f172a;
+  --button-icon: #2563eb;
+  --textarea-bg: rgba(248, 250, 252, 0.85);
+  --textarea-border: rgba(148, 163, 184, 0.45);
+  --textarea-focus: rgba(37, 99, 235, 0.45);
+  --textarea-focus-ring: rgba(37, 99, 235, 0.18);
+  --textarea-placeholder: rgba(15, 23, 42, 0.45);
+  --keyboard-bg: rgba(255, 255, 255, 0.7);
+  --keyboard-border: rgba(15, 23, 42, 0.08);
+  --key-bg: linear-gradient(180deg, #eef2ff, #dbeafe);
+  --key-border: rgba(99, 102, 241, 0.25);
+  --key-shadow: inset 0 0 0 1px rgba(129, 140, 248, 0.22), 0 8px 16px rgba(148, 163, 184, 0.35);
+  --key-highlight: rgba(148, 163, 184, 0.32);
+  --key-pressed-bg: linear-gradient(180deg, #dbe3fb, #c7d4fa);
+  --key-pressed-border: rgba(37, 99, 235, 0.45);
+  --key-text: #0f172a;
+  --key-shift: rgba(37, 99, 235, 0.8);
+  --space-text: #0f172a;
+  --accent-red: #ff4d6d;
+  --key-pressed-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.2), 0 4px 12px rgba(37, 99, 235, 0.15);
   font-family: 'Manrope', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.theme-dark {
+  color-scheme: dark;
+  --bg: #0f172a;
+  --bg-gradient-top: rgba(14, 165, 233, 0.18);
+  --bg-gradient-bottom: rgba(244, 114, 182, 0.15);
+  --panel-bg: rgba(15, 23, 42, 0.75);
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --panel-shadow: 0 18px 45px rgba(15, 23, 42, 0.35);
+  --page-text: #f8fafc;
+  --panel-text: #f8fafc;
+  --panel-muted: rgba(173, 216, 255, 0.65);
+  --button-bg: linear-gradient(180deg, rgba(16, 28, 48, 0.92), rgba(8, 13, 24, 0.96));
+  --button-border: rgba(120, 226, 255, 0.6);
+  --button-border-strong: rgba(163, 245, 255, 0.95);
+  --button-shadow: inset 0 0 14px rgba(120, 226, 255, 0.2), 0 12px 25px rgba(0, 0, 0, 0.45);
+  --button-shadow-hover: inset 0 0 18px rgba(163, 245, 255, 0.35), 0 16px 32px rgba(0, 0, 0, 0.55);
+  --button-text: #e6faff;
+  --button-icon: #78e2ff;
+  --textarea-bg: rgba(248, 250, 252, 0.15);
+  --textarea-border: rgba(248, 250, 252, 0.15);
+  --textarea-focus: rgba(14, 165, 233, 0.5);
+  --textarea-focus-ring: rgba(14, 165, 233, 0.18);
+  --textarea-placeholder: rgba(248, 250, 252, 0.65);
+  --keyboard-bg: rgba(15, 23, 42, 0.55);
+  --keyboard-border: rgba(248, 250, 252, 0.08);
+  --key-bg: linear-gradient(180deg, rgba(9, 15, 26, 0.95), rgba(27, 32, 47, 0.9));
+  --key-border: rgba(120, 226, 255, 0.15);
+  --key-shadow: inset 0 0 0 1px rgba(120, 226, 255, 0.08), 0 8px 16px rgba(0, 0, 0, 0.45);
+  --key-highlight: rgba(120, 226, 255, 0.22);
+  --key-pressed-bg: linear-gradient(180deg, rgba(20, 34, 58, 0.95), rgba(10, 18, 34, 0.98));
+  --key-pressed-border: rgba(163, 245, 255, 0.4);
+  --key-text: #f8fafc;
+  --key-shift: rgba(120, 226, 255, 0.8);
+  --space-text: #f8fafc;
+  --accent-red: #ff4d6d;
+  --key-pressed-shadow: inset 0 0 0 1px rgba(163, 245, 255, 0.3), 0 4px 12px rgba(163, 245, 255, 0.22);
 }
 
 * {
@@ -18,13 +82,14 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(circle at top, rgba(14, 165, 233, 0.18), transparent 55%),
-    radial-gradient(circle at bottom, rgba(244, 114, 182, 0.15), transparent 60%),
+  background: radial-gradient(circle at top, var(--bg-gradient-top), transparent 55%),
+    radial-gradient(circle at bottom, var(--bg-gradient-bottom), transparent 60%),
     var(--bg);
-  color: var(--text-inverse);
+  color: var(--page-text);
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  font-family: 'Manrope', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .page-header {
@@ -53,30 +118,51 @@ body {
   backdrop-filter: blur(18px);
   border-radius: 28px;
   padding: clamp(1.5rem, 2vw + 0.75rem, 2.25rem);
-  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.35);
+  border: 1px solid var(--panel-border);
+  box-shadow: var(--panel-shadow);
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  color: var(--panel-text);
 }
 
-.editor__header h2 {
-  margin: 0;
-  font-family: 'Cairo', sans-serif;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--text-inverse);
+.panel__toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 0.5rem;
 }
 
-.editor__header p {
-  margin: 0.5rem 0 0;
-  color: var(--muted);
-  font-size: 0.95rem;
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid var(--button-border);
+  background: var(--button-bg);
+  color: var(--button-text);
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  box-shadow: var(--button-shadow);
 }
 
-.editor__intro {
-  margin: 0 0 0.5rem;
-  color: var(--muted);
-  font-size: 0.95rem;
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  transform: translateY(-1px);
+  border-color: var(--button-border-strong);
+  box-shadow: var(--button-shadow-hover);
+  outline: none;
+}
+
+.theme-toggle__icon {
+  font-size: 1rem;
+  color: var(--button-icon);
+  filter: drop-shadow(0 0 4px rgba(37, 99, 235, 0.25));
 }
 
 .editor__actions {
@@ -93,15 +179,15 @@ body {
   gap: 0.5rem;
   padding: 0.9rem 1.5rem;
   border-radius: 12px;
-  border: 2px solid rgba(120, 226, 255, 0.6);
-  background: linear-gradient(180deg, rgba(16, 28, 48, 0.92), rgba(8, 13, 24, 0.96));
-  color: #e6faff;
+  border: 2px solid var(--button-border);
+  background: var(--button-bg);
+  color: var(--button-text);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-  box-shadow: inset 0 0 14px rgba(120, 226, 255, 0.2), 0 12px 25px rgba(0, 0, 0, 0.45), 0 0 18px rgba(120, 226, 255, 0.28);
+  box-shadow: var(--button-shadow);
 }
 
 .action-button::before {
@@ -109,8 +195,8 @@ body {
   position: absolute;
   inset: 6px;
   border-radius: 8px;
-  border: 1px solid rgba(120, 226, 255, 0.35);
-  box-shadow: inset 0 0 10px rgba(120, 226, 255, 0.25);
+  border: 1px solid var(--button-border);
+  box-shadow: inset 0 0 10px rgba(96, 165, 250, 0.2);
   opacity: 0.85;
   pointer-events: none;
 }
@@ -118,9 +204,9 @@ body {
 .action-button:hover,
 .action-button:focus-visible {
   transform: translateY(-2px);
-  border-color: rgba(163, 245, 255, 0.95);
-  color: #ffffff;
-  box-shadow: inset 0 0 18px rgba(163, 245, 255, 0.35), 0 16px 32px rgba(0, 0, 0, 0.55), 0 0 32px rgba(163, 245, 255, 0.45);
+  border-color: var(--button-border-strong);
+  color: var(--button-text);
+  box-shadow: var(--button-shadow-hover);
   outline: none;
 }
 
@@ -129,17 +215,17 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #78e2ff;
-  filter: drop-shadow(0 0 6px rgba(120, 226, 255, 0.5));
+  color: var(--button-icon);
+  filter: drop-shadow(0 0 6px rgba(37, 99, 235, 0.3));
 }
 
 textarea {
   min-height: clamp(160px, 22vh, 220px);
   width: 100%;
   border-radius: 24px;
-  border: 1px solid rgba(248, 250, 252, 0.15);
-  background: rgba(248, 250, 252, 0.15);
-  color: var(--text-inverse);
+  border: 1px solid var(--textarea-border);
+  background: var(--textarea-bg);
+  color: var(--panel-text);
   font-family: 'Cairo', 'Manrope', sans-serif;
   font-size: 1.4rem;
   line-height: 1.8;
@@ -150,21 +236,21 @@ textarea {
 
 textarea:focus {
   outline: none;
-  border-color: rgba(14, 165, 233, 0.5);
-  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.18);
+  border-color: var(--textarea-focus);
+  box-shadow: 0 0 0 4px var(--textarea-focus-ring);
 }
 
 textarea::placeholder {
-  color: rgba(248, 250, 252, 0.65);
+  color: var(--textarea-placeholder);
 }
 
 .keyboard-suite {
   display: grid;
   gap: 1.5rem;
-  background: rgba(15, 23, 42, 0.55);
+  background: var(--keyboard-bg);
   border-radius: 24px;
   padding: 1.5rem;
-  border: 1px solid rgba(248, 250, 252, 0.08);
+  border: 1px solid var(--keyboard-border);
 }
 
 .tashkeel__header {
@@ -184,16 +270,16 @@ textarea::placeholder {
 .ghost-button {
   padding: 0.4rem 0.85rem;
   border-radius: 999px;
-  border: 1px solid rgba(248, 250, 252, 0.25);
+  border: 1px solid var(--button-border);
   background: transparent;
-  color: var(--text-inverse);
+  color: var(--panel-text);
   cursor: pointer;
   font-size: 0.9rem;
 }
 
 .ghost-button:hover,
 .ghost-button:focus-visible {
-  border-color: rgba(14, 165, 233, 0.6);
+  border-color: var(--button-border-strong);
   outline: none;
 }
 
@@ -206,9 +292,9 @@ textarea::placeholder {
 .tashkeel button {
   padding: 0.75rem;
   border-radius: 12px;
-  border: 1px solid rgba(248, 250, 252, 0.2);
-  background: rgba(248, 250, 252, 0.08);
-  color: var(--text-inverse);
+  border: 1px solid var(--button-border);
+  background: var(--button-bg);
+  color: var(--panel-text);
   font-size: 1.4rem;
   cursor: pointer;
   transition: transform 0.15s ease, background 0.15s ease;
@@ -217,7 +303,9 @@ textarea::placeholder {
 .tashkeel button:hover,
 .tashkeel button:focus-visible {
   transform: translateY(-2px);
-  background: rgba(14, 165, 233, 0.25);
+  border-color: var(--button-border-strong);
+  background: var(--button-bg);
+  box-shadow: var(--button-shadow-hover);
   outline: none;
 }
 
@@ -236,14 +324,14 @@ textarea::placeholder {
   position: relative;
   border-radius: 12px;
   padding: 0.75rem;
-  border: 1px solid rgba(120, 226, 255, 0.15);
-  background: linear-gradient(180deg, rgba(9, 15, 26, 0.95), rgba(27, 32, 47, 0.9));
-  color: var(--text-inverse);
+  border: 1px solid var(--key-border);
+  background: var(--key-bg);
+  color: var(--key-text);
   font-family: 'Cairo', sans-serif;
   font-size: 1.1rem;
   cursor: pointer;
   transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
-  box-shadow: inset 0 0 0 1px rgba(120, 226, 255, 0.08), 0 8px 16px rgba(0, 0, 0, 0.45);
+  box-shadow: var(--key-shadow);
 }
 
 .key::before {
@@ -251,27 +339,27 @@ textarea::placeholder {
   position: absolute;
   inset: 4px;
   border-radius: 10px;
-  background: radial-gradient(circle at top, rgba(120, 226, 255, 0.22), transparent 60%);
-  opacity: 0.65;
+  background: radial-gradient(circle at top, var(--key-highlight), transparent 65%);
+  opacity: 0.6;
   pointer-events: none;
   transition: opacity 0.12s ease;
 }
 
 .key[data-role="character"] {
-  box-shadow: inset 0 0 0 1px rgba(120, 226, 255, 0.12), 0 8px 18px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--key-shadow);
 }
 
 .key:active,
 .key.active {
   transform: translateY(2px);
-  border-color: rgba(163, 245, 255, 0.4);
-  background: linear-gradient(180deg, rgba(20, 34, 58, 0.95), rgba(10, 18, 34, 0.98));
-  box-shadow: inset 0 0 0 1px rgba(163, 245, 255, 0.3), 0 4px 12px rgba(163, 245, 255, 0.22);
+  border-color: var(--key-pressed-border);
+  background: var(--key-pressed-bg);
+  box-shadow: var(--key-pressed-shadow);
 }
 
 .key:active::before,
 .key.active::before {
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 .key__legend {
@@ -291,7 +379,7 @@ textarea::placeholder {
   opacity: 0.6;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(120, 226, 255, 0.8);
+  color: var(--key-shift);
   transform: translateY(-2px);
   margin-top: -0.25rem;
 }
@@ -304,8 +392,8 @@ textarea::placeholder {
 }
 
 .key__primary--arabic {
-  color: #ff4d6d;
-  text-shadow: 0 0 8px rgba(255, 77, 109, 0.55);
+  color: var(--accent-red);
+  text-shadow: 0 0 8px rgba(255, 77, 109, 0.45);
 }
 
 .key[data-role="space"] .key__legend {
@@ -316,6 +404,7 @@ textarea::placeholder {
 .key[data-role="space"] .key__primary {
   font-size: 1.05rem;
   letter-spacing: 0.18em;
+  color: var(--space-text);
 }
 
 .sr-only {
