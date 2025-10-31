@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arabic keyboard Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&family=Manrope:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="page-header" role="banner">
+    <h1>Arabic keyboard Studio</h1>
+  </header>
+
+  <main class="editor" aria-labelledby="editor-title">
+    <section class="editor__panel">
+      <header class="editor__header">
+        <h2 id="editor-title">Compose in Arabic</h2>
+        <p>Use the buttons to copy your text or search it instantly.</p>
+      </header>
+
+      <div class="editor__actions" role="group" aria-label="Primary actions">
+        <button id="copy-text" type="button" class="action-button">Copy</button>
+        <button id="clear-text" type="button" class="action-button">Clear</button>
+        <button id="google-search" type="button" class="action-button">Google</button>
+        <button id="youtube-search" type="button" class="action-button">Youtube</button>
+        <button id="download-text" type="button" class="action-button">Save</button>
+      </div>
+
+      <label for="arabic-text" class="sr-only">Arabic text editor</label>
+      <textarea
+        id="arabic-text"
+        lang="ar"
+        dir="rtl"
+        placeholder="اكتب هنا باستخدام لوحة المفاتيح العربية أو لوحة المفاتيح الفعلية لديك"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+      ></textarea>
+
+      <section class="keyboard-suite" aria-label="Arabic virtual keyboard">
+        <header class="tashkeel__header">
+          <h3>تشكيل</h3>
+          <button id="toggle-tashkeel" type="button" class="ghost-button" aria-expanded="true">Hide</button>
+        </header>
+        <div id="tashkeel-keys" class="tashkeel"></div>
+        <section class="keyboard" id="keyboard" aria-label="Arabic keyboard layout"></section>
+      </section>
+    </section>
+  </main>
+
+  <div id="live-region" class="sr-only" role="status" aria-live="polite"></div>
+
+  <script src="script.js" type="module"></script>
+</body>
+</html>
