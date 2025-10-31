@@ -1,23 +1,12 @@
-const textArea = document.getElementById('arabic-text');
-const keyboardContainer = document.getElementById('keyboard');
-const tashkeelContainer = document.getElementById('tashkeel-keys');
-const copyButton = document.getElementById('copy-text');
-const googleButton = document.getElementById('google-search');
-const youtubeButton = document.getElementById('youtube-search');
-const downloadButton = document.getElementById('download-text');
-const themeToggle = document.getElementById('theme-toggle');
-const clearButton = document.getElementById('clear-text');
-const suggestionsToggle = document.getElementById('suggestions-toggle');
-const suggestionsList = document.getElementById('suggestions-list');
-const suggestionTemplate = document.getElementById('suggestion-template');
-const toggleTashkeel = document.getElementById('toggle-tashkeel');
-const characterCount = document.getElementById('character-count');
-const wordCount = document.getElementById('word-count');
-const tashkeelCount = document.getElementById('tashkeel-count');
-const loadSampleButton = document.getElementById('load-sample');
-const currentYear = document.getElementById('current-year');
-
-currentYear.textContent = new Date().getFullYear();
+let textArea;
+let keyboardContainer;
+let tashkeelContainer;
+let copyButton;
+let clearButton;
+let googleButton;
+let youtubeButton;
+let downloadButton;
+let toggleTashkeel;
 
 const tashkeelCharacters = ['َ', 'ً', 'ُ', 'ٌ', 'ِ', 'ٍ', 'ْ', 'ّ', 'ٰ', 'ٔ'];
 
@@ -28,7 +17,7 @@ const keyboardRows = [
     { code: 'Digit2', primary: '٢', secondary: '"' },
     { code: 'Digit3', primary: '٣', secondary: '#' },
     { code: 'Digit4', primary: '٤', secondary: '$' },
-    { code: 'Digit5', primary: '٥', secondary: '%'},
+    { code: 'Digit5', primary: '٥', secondary: '%' },
     { code: 'Digit6', primary: '٦', secondary: '^' },
     { code: 'Digit7', primary: '٧', secondary: '&' },
     { code: 'Digit8', primary: '٨', secondary: '*' },
@@ -84,58 +73,28 @@ const keyboardRows = [
     { code: 'ShiftRight', legend: 'Shift', type: 'shift', size: 3 }
   ],
   [
-    { code: 'ControlLeft', legend: 'Ctrl', type: 'meta', size: 2 },
-    { code: 'AltLeft', legend: 'Alt', type: 'meta', size: 2 },
-    { code: 'Lang', legend: 'Lang', type: 'lang', size: 2 },
-    { code: 'Space', legend: 'Space', type: 'space', size: 7 },
-    { code: 'AltRight', legend: 'Alt', type: 'meta', size: 2 }
+    { code: 'Space', legend: 'Space', type: 'space', size: 15 }
   ]
 ];
 
-const suggestionCorpus = [
-  'السلام عليكم',
-  'مرحبا بك',
-  'شكرا جزيلا',
-  'كيف حالك؟',
-  'صباح الخير',
-  'مساء الخير',
-  'مع السلامة',
-  'ما اسمك؟',
-  'أنا بخير',
-  'من فضلك',
-  'أهلا وسهلا',
-  'اللغة العربية جميلة',
-  'مَرْحَبًا بِكَ',
-  'تَشَرَّفْنَا',
-  'أحتاج إلى مساعدة',
-  'أحب تعلم العربية',
-  'هيا بنا نبدأ',
-  'أراك لاحقًا',
-  'في أمان الله',
-  'اللَّهُمَّ صَلِّ عَلَى مُحَمَّد'
-];
-
-const sampleText = `اللُّغَةُ العَرَبِيَّةُ مِنْ أَغْنَى اللُّغَاتِ فِي العَالَمِ. يَسْتَخْدِمُ هَذَا المُحَرِّرُ لَوْحَةَ مَفَاتِيحَ افْتِرَاضِيَّةً مَعَ تَشْكِيلٍ وَاقْتِرَاحَاتٍ ذَكِيَّةٍ لِمُسَاعَدَتِكَ عَلَى الكِتَابَةِ بِسُرْعَةٍ وَدِقَّةٍ.`;
-
 let shiftActive = false;
-let physicalLayoutEnabled = true;
 let capsLockActive = false;
+
+const physicalKeyMap = new Map();
+let caretBlinkTimer;
+let caretVisible = true;
 
 function createKeyElement(key) {
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'key';
   button.dataset.code = key.code;
-  button.dataset.legend = key.legend || key.primary || '';
   const spanSize = key.size || 1;
   button.dataset.size = spanSize;
   button.style.gridColumn = `span ${spanSize}`;
 
-  if (key.type === 'character' || !key.type) {
-    button.dataset.role = 'character';
-  } else {
-    button.dataset.role = key.type;
-  }
+  const role = key.type && key.type !== 'character' ? key.type : 'character';
+  button.dataset.role = role;
 
   const legendWrapper = document.createElement('span');
   legendWrapper.className = 'key__legend';
@@ -143,6 +102,12 @@ function createKeyElement(key) {
   const primary = document.createElement('span');
   primary.className = 'key__primary';
   primary.textContent = key.primary || key.legend || '';
+  if (key.primary) {
+    primary.dataset.primary = key.primary;
+    if (/[\u0600-\u06FF]/.test(key.primary)) {
+      primary.classList.add('key__primary--arabic');
+    }
+  }
   legendWrapper.appendChild(primary);
 
   if (key.secondary) {
@@ -157,13 +122,13 @@ function createKeyElement(key) {
   }
 
   button.appendChild(legendWrapper);
-
   button.addEventListener('click', () => handleOnScreenKey(key));
-
   return button;
 }
 
 function buildKeyboard() {
+  keyboardContainer.innerHTML = '';
+  physicalKeyMap.clear();
   keyboardRows.forEach((row) => {
     const rowElement = document.createElement('div');
     rowElement.className = 'keyboard__row';
@@ -171,6 +136,10 @@ function buildKeyboard() {
     row.forEach((key) => {
       const keyElement = createKeyElement(key);
       rowElement.appendChild(keyElement);
+
+      if (key.primary && (!key.type || key.type === 'character')) {
+        physicalKeyMap.set(key.code, { primary: key.primary, secondary: key.secondary });
+      }
     });
 
     keyboardContainer.appendChild(rowElement);
@@ -178,6 +147,7 @@ function buildKeyboard() {
 }
 
 function buildTashkeel() {
+  tashkeelContainer.innerHTML = '';
   tashkeelCharacters.forEach((char) => {
     const button = document.createElement('button');
     button.type = 'button';
@@ -191,8 +161,7 @@ function insertCharacter(char) {
   const { selectionStart, selectionEnd, value } = textArea;
   const before = value.slice(0, selectionStart);
   const after = value.slice(selectionEnd);
-  const newValue = `${before}${char}${after}`;
-  textArea.value = newValue;
+  textArea.value = `${before}${char}${after}`;
   const cursorPosition = selectionStart + char.length;
   textArea.setSelectionRange(cursorPosition, cursorPosition);
   textArea.dispatchEvent(new Event('input'));
@@ -238,13 +207,11 @@ function handleOnScreenKey(key) {
       capsLockActive = !capsLockActive;
       updateCapsState();
       break;
-    case 'lang':
-      physicalLayoutEnabled = !physicalLayoutEnabled;
-      updateLangState();
-      announce(`Physical layout remapping ${physicalLayoutEnabled ? 'enabled' : 'disabled'}.`);
-      break;
     default: {
       const char = resolveCharacter(key);
+      if (!char) {
+        return;
+      }
       insertCharacter(char);
       if (shiftActive) {
         shiftActive = false;
@@ -282,17 +249,6 @@ function updateCapsState() {
   });
 }
 
-function updateLangState() {
-  document.querySelectorAll('[data-role="lang"]').forEach((el) => {
-    el.classList.toggle('active', physicalLayoutEnabled);
-    el.setAttribute('aria-pressed', String(physicalLayoutEnabled));
-    const primary = el.querySelector('.key__primary');
-    if (primary) {
-      primary.textContent = physicalLayoutEnabled ? 'Lang On' : 'Lang Off';
-    }
-  });
-}
-
 function copyToClipboard(text) {
   if (!text) {
     announce('Nothing to copy yet.');
@@ -325,14 +281,16 @@ function openSearch(provider) {
     return;
   }
   copyToClipboard(text);
-  const base = provider === 'google' ? 'https://www.google.com/search?q=' : 'https://www.youtube.com/results?search_query=';
+  const base = provider === 'google'
+    ? 'https://www.google.com/search?q='
+    : 'https://www.youtube.com/results?search_query=';
   window.open(`${base}${encodeURIComponent(text)}`, '_blank', 'noopener');
 }
 
 function downloadText() {
   const text = textArea.value;
   if (!text) {
-    announce('Nothing to download yet.');
+    announce('Nothing to save yet.');
     return;
   }
   const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
@@ -344,109 +302,45 @@ function downloadText() {
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
-  announce('Text file downloaded.');
+  announce('Text file saved.');
+}
+
+function clearText() {
+  if (!textArea.value) {
+    announce('The board is already empty.');
+    return;
+  }
+  textArea.value = '';
+  textArea.dispatchEvent(new Event('input'));
+  textArea.focus();
+  announce('Text cleared.');
+  caretVisible = true;
+  textArea.placeholder = '|';
 }
 
 function announce(message) {
   const live = document.getElementById('live-region');
-  if (live) {
-    live.textContent = '';
-    setTimeout(() => {
-      live.textContent = message;
-    }, 10);
-  } else {
-    const region = document.createElement('div');
-    region.id = 'live-region';
-    region.className = 'sr-only';
-    region.setAttribute('role', 'status');
-    region.setAttribute('aria-live', 'polite');
-    document.body.appendChild(region);
-    announce(message);
-  }
-}
-
-function restoreState() {
-  const saved = localStorage.getItem('arabicKeyboardStudio:text');
-  if (saved) {
-    textArea.value = saved;
-  }
-  const savedTheme = localStorage.getItem('arabicKeyboardStudio:theme');
-  if (savedTheme === 'dark') {
-    document.body.classList.add('dark');
-    themeToggle.setAttribute('aria-pressed', 'true');
-    themeToggle.textContent = 'Toggle light mode';
-  }
-}
-
-function persistState() {
-  localStorage.setItem('arabicKeyboardStudio:text', textArea.value);
-}
-
-function updateAnalytics() {
-  const text = textArea.value;
-  characterCount.textContent = text.length;
-  const words = text.trim() ? text.trim().split(/\s+/) : [];
-  wordCount.textContent = words.length;
-  const diacriticMatches = text.match(/[\u064B-\u0652\u0670\u0654]/g);
-  tashkeelCount.textContent = diacriticMatches ? diacriticMatches.length : 0;
-}
-
-function getCurrentWord() {
-  const { selectionStart, value } = textArea;
-  const slice = value.slice(0, selectionStart);
-  const parts = slice.split(/\s+/);
-  return parts[parts.length - 1] || '';
-}
-
-function updateSuggestions() {
-  suggestionsList.innerHTML = '';
-  if (!suggestionsToggle.checked) {
+  if (!live) {
     return;
   }
-  const word = getCurrentWord();
-  if (!word || word.length < 2) {
-    renderSuggestions(suggestionCorpus.slice(0, 6));
-    return;
-  }
-  const normalized = word.replace(/[^\u0621-\u064A\u0660-\u0669\u064B-\u0652\u0670]/g, '');
-  if (!normalized) {
-    renderSuggestions(suggestionCorpus.slice(0, 6));
-    return;
-  }
-  const matches = suggestionCorpus
-    .filter((item) => item.startsWith(normalized))
-    .slice(0, 6);
-  if (matches.length) {
-    renderSuggestions(matches);
-  } else {
-    renderSuggestions(suggestionCorpus.slice(0, 6));
-  }
+  live.textContent = '';
+  setTimeout(() => {
+    live.textContent = message;
+  }, 10);
 }
 
-function renderSuggestions(items) {
-  items.forEach((item) => {
-    const instance = suggestionTemplate.content.firstElementChild.cloneNode(true);
-    instance.textContent = item;
-    instance.addEventListener('click', () => applySuggestion(item));
-    suggestionsList.appendChild(instance);
-  });
-}
-
-function applySuggestion(text) {
-  const { selectionStart, selectionEnd, value } = textArea;
-  const before = value.slice(0, selectionStart).replace(/\S+$/, '');
-  const after = value.slice(selectionEnd);
-  textArea.value = `${before}${text}${after}`;
-  const cursor = (before + text).length;
-  textArea.setSelectionRange(cursor, cursor);
-  textArea.dispatchEvent(new Event('input'));
-  textArea.focus();
+function toggleTashkeelVisibility() {
+  if (!toggleTashkeel) {
+    return;
+  }
+  const expanded = toggleTashkeel.getAttribute('aria-expanded') === 'true';
+  const next = !expanded;
+  toggleTashkeel.setAttribute('aria-expanded', String(next));
+  toggleTashkeel.textContent = next ? 'Hide' : 'Show';
+  tashkeelContainer.style.display = next ? 'grid' : 'none';
 }
 
 function handlePhysicalKeydown(event) {
-  if (!physicalLayoutEnabled) {
-    return;
-  }
   if (event.metaKey || event.ctrlKey || event.altKey) {
     return;
   }
@@ -471,18 +365,6 @@ function handlePhysicalKeydown(event) {
   insertCharacter(char);
 }
 
-const physicalKeyMap = new Map();
-
-function buildPhysicalMap() {
-  keyboardRows.forEach((row) => {
-    row.forEach((key) => {
-      if (key.primary && (!key.type || key.type === 'character')) {
-        physicalKeyMap.set(key.code, { primary: key.primary, secondary: key.secondary });
-      }
-    });
-  });
-}
-
 function highlightPhysicalKey(code, active) {
   const keyElement = document.querySelector(`.key[data-code="${code}"]`);
   if (keyElement) {
@@ -491,13 +373,12 @@ function highlightPhysicalKey(code, active) {
 }
 
 function handlePhysicalKeyup(event) {
-  highlightPhysicalKey(event.code, false);
+  if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
+    highlightPhysicalKey(event.code, false);
+  }
 }
 
 function handlePhysicalKeypressVisual(event) {
-  if (!physicalLayoutEnabled) {
-    return;
-  }
   const key = physicalKeyMap.get(event.code);
   if (!key) {
     return;
@@ -506,53 +387,37 @@ function handlePhysicalKeypressVisual(event) {
   setTimeout(() => highlightPhysicalKey(event.code, false), 180);
 }
 
-function toggleTheme() {
-  const dark = document.body.classList.toggle('dark');
-  themeToggle.setAttribute('aria-pressed', String(dark));
-  themeToggle.textContent = dark ? 'Toggle light mode' : 'Toggle dark mode';
-  localStorage.setItem('arabicKeyboardStudio:theme', dark ? 'dark' : 'light');
-}
-
-function clearText() {
-  textArea.value = '';
-  textArea.dispatchEvent(new Event('input'));
-  textArea.focus();
-}
-
-function toggleTashkeelVisibility() {
-  const expanded = toggleTashkeel.getAttribute('aria-expanded') === 'true';
-  const next = !expanded;
-  toggleTashkeel.setAttribute('aria-expanded', String(next));
-  toggleTashkeel.textContent = next ? 'Hide' : 'Show';
-  tashkeelContainer.style.display = next ? 'grid' : 'none';
-}
-
-function loadSample() {
-  textArea.value = sampleText;
-  textArea.dispatchEvent(new Event('input'));
-  textArea.focus();
-}
-
 function initEventListeners() {
-  copyButton.addEventListener('click', () => copyToClipboard(textArea.value));
-  googleButton.addEventListener('click', () => openSearch('google'));
-  youtubeButton.addEventListener('click', () => openSearch('youtube'));
-  downloadButton.addEventListener('click', downloadText);
-  themeToggle.addEventListener('click', toggleTheme);
-  clearButton.addEventListener('click', clearText);
-  suggestionsToggle.addEventListener('change', updateSuggestions);
-  toggleTashkeel.addEventListener('click', toggleTashkeelVisibility);
-  loadSampleButton.addEventListener('click', loadSample);
-
-  textArea.addEventListener('input', () => {
-    persistState();
-    updateAnalytics();
-    updateSuggestions();
-  });
+  if (copyButton) {
+    copyButton.addEventListener('click', () => copyToClipboard(textArea.value));
+  }
+  if (clearButton) {
+    clearButton.addEventListener('click', clearText);
+  }
+  if (googleButton) {
+    googleButton.addEventListener('click', () => openSearch('google'));
+  }
+  if (youtubeButton) {
+    youtubeButton.addEventListener('click', () => openSearch('youtube'));
+  }
+  if (downloadButton) {
+    downloadButton.addEventListener('click', downloadText);
+  }
+  if (toggleTashkeel) {
+    toggleTashkeel.addEventListener('click', toggleTashkeelVisibility);
+  }
 
   textArea.addEventListener('keydown', handlePhysicalKeydown);
   textArea.addEventListener('keydown', handlePhysicalKeypressVisual);
   textArea.addEventListener('keyup', handlePhysicalKeyup);
+  textArea.addEventListener('input', handleTextInput);
+  textArea.addEventListener('focus', startCaretBlinking);
+  textArea.addEventListener('blur', () => {
+    if (!textArea.value) {
+      caretVisible = true;
+      textArea.placeholder = '|';
+    }
+  });
 
   window.addEventListener('blur', () => {
     shiftActive = false;
@@ -560,16 +425,56 @@ function initEventListeners() {
   });
 }
 
-function init() {
-  buildKeyboard();
-  buildTashkeel();
-  buildPhysicalMap();
-  updateLangState();
-  updateCapsState();
-  restoreState();
-  updateAnalytics();
-  updateSuggestions();
-  initEventListeners();
+function handleTextInput() {
+  if (textArea.value) {
+    textArea.placeholder = '';
+    return;
+  }
+  caretVisible = true;
+  textArea.placeholder = '|';
 }
 
-init();
+function startCaretBlinking() {
+  if (caretBlinkTimer) {
+    return;
+  }
+  caretVisible = true;
+  textArea.placeholder = '|';
+  caretBlinkTimer = setInterval(() => {
+    if (!textArea) {
+      return;
+    }
+    if (textArea.value) {
+      textArea.placeholder = '';
+      caretVisible = true;
+      return;
+    }
+    caretVisible = !caretVisible;
+    textArea.placeholder = caretVisible ? '|' : '';
+  }, 650);
+}
+
+function init() {
+  textArea = document.getElementById('arabic-text');
+  keyboardContainer = document.getElementById('keyboard');
+  tashkeelContainer = document.getElementById('tashkeel-keys');
+  copyButton = document.getElementById('copy-text');
+  clearButton = document.getElementById('clear-text');
+  googleButton = document.getElementById('google-search');
+  youtubeButton = document.getElementById('youtube-search');
+  downloadButton = document.getElementById('download-text');
+  toggleTashkeel = document.getElementById('toggle-tashkeel');
+
+  if (!textArea || !keyboardContainer || !tashkeelContainer) {
+    return;
+  }
+
+  buildKeyboard();
+  buildTashkeel();
+  updateCapsState();
+  updateShiftState();
+  initEventListeners();
+  startCaretBlinking();
+}
+
+window.addEventListener('DOMContentLoaded', init);
